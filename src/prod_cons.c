@@ -26,7 +26,7 @@
 
 
 #define NUM_OF_FUNCTIONS 10    // Number of functions that we will use
-#define LOOP 300000            // The number of objects that a producer add to queue's buffer
+// #define LOOP 300000            // The number of objects that a producer add to queue's buffer
 #define P 1                    // Number of producers
 #define Q 2                    // Number of consumers
 
@@ -141,7 +141,7 @@ void *producer (void *q)
     metrixArrayAdd(f2,driftTime);
     printf("Drift time : %d \n " , (int)driftTime);
 
-    double sleepTime = T->period - driftTime;
+    double sleepTime = T->period - driftTime*1e-3;
     if(sleepTime > 0){
       usleep(sleepTime*(int)1e3);
       //printf("Drift time : %lf \n" , sleepTime);
@@ -258,19 +258,12 @@ int main (int argc, char* argv[])
 
 
 
-
   //Available timer's period in mseconds
   int period[3] = {1000, 100, 10};
-  int mode = 1;
-  printf("Timer Execution Options:\n");
-  printf("1 - 1 sec period\n");
-  printf("2 - 0.1 sec period\n");
-  printf("3 - 0.01 sec period\n");
-  printf("4 - All of the above\n");
-  printf("Select Mode: ");
-  scanf("%d", &mode);
+  int mode = MODE;
+
   if (mode!=1 && mode!=2 && mode!=3 && mode!=4) {
-      printf("No such mode \n");// // Work function implementations
+      printf(" ERROR: Try again \n");// // Work function implementations
       exit(0);
   }
 
