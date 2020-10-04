@@ -132,19 +132,18 @@ void *producer (void *q)
     //Calculate the time taken for a producer to push a job to the queue
     int prodJobADD = (prodJobEnd.tv_sec-prodJobStart.tv_sec)*(int)1e6 + prodJobEnd.tv_usec-prodJobStart.tv_usec;
     metrixArrayAdd(f4, prodJobADD);
-    printf("\nProducer push waiting time : %d  \n " , prodJobADD);
+    printf("\n Pro waiting time: %d  \n " , prodJobADD);
 
     pthread_mutex_unlock(fifo->mut);
     pthread_cond_signal(fifo->notEmpty);  // When the producer's thread add an object, send this signal to unlock a thread in consumer()
 
     double driftTime = previousInsert - nextInsert;
     metrixArrayAdd(f2,driftTime);
-    printf("Drift time : %d \n " , (int)driftTime);
+    printf("Drift: %d \n " , (int)driftTime);
 
     double sleepTime = T->period - driftTime*1e-3;
     if(sleepTime > 0){
       usleep(sleepTime*(int)1e3);
-      //printf("Drift time : %lf \n" , sleepTime);
     }
     else{
       continue;
@@ -209,7 +208,7 @@ void *consumer (void *q)
     gettimeofday(&leaveTime,NULL);
     //Calculating the waiting time at the queue
     waitingTime= (leaveTime.tv_sec -(arrTime[fifo->head]).tv_sec) *1e6 + (leaveTime.tv_usec-(arrTime[fifo->head]).tv_usec) ;
-    printf("The waiting time is : %d  \n " , waitingTime);
+    printf("Waiting time: %d  \n " , waitingTime);
     metrixArrayAdd(f1,waitingTime);
 
     queueDel (fifo, &wf);
@@ -232,7 +231,7 @@ void *consumer (void *q)
 
     pthread_mutex_lock(conArg->consumerMut);
     int JobDur = (JobExecEnd.tv_sec-JobExecStart.tv_sec)*(int)1e6 + JobExecEnd.tv_usec-JobExecStart.tv_usec;
-    printf("Execution time is  : %d  \n " , JobDur);
+    printf("Execution time: %d  \n " , JobDur);
     metrixArrayAdd(f3,JobDur);
     pthread_mutex_unlock(conArg->consumerMut);
 
